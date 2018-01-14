@@ -82,17 +82,3 @@ g = tf.get_default_graph()
 
 # Do not mix default graphs and user created graphs
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -128,27 +128,66 @@ c = tf.Variable(tf.zeros(784, 10))
 # As mentioned before Variable is a class and has several inbuilt ops
 # So to run these ops a session is to be called
 
+# Easiest way to initialize all variables at once
+
+init = tf.global_variables_initializer()
+with tf.Session() as sess:
+    sess.run(init)
 
 
+# Initializing a subset of variables
 
+init_subset = tf.variables_intializer([a, b], name='init_subset')
+with tf.Session() as sess:
+    sess.run(init_subset)
 
+# Single variable initializer...
+# Every variable has an initializer op built in which can be used to initialize a single variable
 
+w = tf.Variable(tf.zeros([784, 10]))
+with tf.Session() as sess:
+    sess.run(w.initializer)
+    print(w.eval())
 
+# Variable Assign
 
+w = tf.Variable(10)
+w.assign(100)
 
+with tf.Session() as sess:
+    sess.run(w.initializer)
+    print(w.eval())
 
+# This would not assign the value of 100 to w, since it is not called
 
+# To make the assignment operation to work
 
+w = tf.Variable(10)
+w_assigned = w.assign(100)
 
+with tf.Session() as sess:
+    sess.run(w.initializer)
+    sess.run(w_assigned)
+    print(w.eval())
 
+# Above we ran both the initializer and the assign op to perform the desired action
+# We can skip the first sess.run(w.initializer) and just run the assign in session...
+# Tensorflow understands w also need to be initialized.
 
+w = tf.Variable(10)
+w_assigned = w.assign(100)
 
+with tf.Session() as sess:
+    # sess.run(w.initializer)
+    sess.run(w_assigned)
+    print(w.eval())
 
+# The above code also works
+# Initializer op is the assign op that assigns the variable initial value to variable itself
 
+my_var = tf.Variable(2, name='my_var')
+my_var_times_two = my_var.assign(2 * my_var)
 
-
-
-
-
-
-
+with tf.Session() as sess:
+    sess.run(my_var_times_two)
+    print(my_var_times_two)

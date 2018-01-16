@@ -113,3 +113,42 @@ y = tf.ones_like(t)
 # the meaning of one's in string ...(Makes sense !!): TypeError
 
 # For booleans a zeros_like give all zeros and ones_like give all ones
+'''
+****************************************************************
+
+////////////////////////// Variables  /////////////////////////////    '''
+
+# Variable is a class and constant is an op.. Hence tf.Variable() and not tf.variable()
+
+# Variable can be a scalar or vector or a matrix
+a = tf.Variable(2, name='scalar')
+b = tf.Variable([1, 2], name='vector')
+c = tf.Variable(tf.zeros(784, 10))
+
+# As mentioned before Variable is a class and has several inbuilt ops
+# So to run these ops a session is to be called
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -191,3 +191,80 @@ my_var_times_two = my_var.assign(2 * my_var)
 with tf.Session() as sess:
     sess.run(my_var_times_two)
     print(my_var_times_two)
+
+
+my_var = tf.Variable(2, name='my_var')
+my_var_times_two = my_var.assign(2 * my_var)
+
+with tf.Session() as sess:
+	sess.run(my_var)
+    sess.run(my_var_times_two)
+    sess.run(my_var_times_two)
+    sess.run(my_var_times_two)
+    sess.run(my_var_times_two)
+
+# This results in my_var being multiplied by 2 everytime my_var_two is called
+
+
+
+# assign_add() and assign_sub()
+my_var = tf.Variable(10)
+
+with tf.Session() as sess:
+	sess.run(my_var.initializer)
+	sess.run(my_var.assign_add(30))
+	sess.run(my_var.assign_sub(40))
+
+# The net result is zero
+
+'''
+***********
+Unlike assign(), assign_add() & assign_sub() cannot initialize as they require the value of my_var
+***********
+'''
+
+# Each session maintains its own copy of variable
+
+my_var = tf.Variable(10)
+
+sess1 = tf.Session()
+sess2 = tf.Session()
+
+sess1.run(my_var.initializer)
+sess1.run(my_var.assign_add(10))
+
+sess2.run(my_var.initializer)
+sess2.run(my_var.assign_sub(10))
+
+sess1.close()
+sess2.close()
+
+# Initializing a variable with another variable
+
+W = tf.Variable(tf.truncated_normal([700, 10]))
+U = tf.Variable(2 * W)
+
+# In the above case while 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

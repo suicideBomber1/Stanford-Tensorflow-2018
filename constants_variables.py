@@ -58,7 +58,7 @@ a = tf.range(3, 18, 3)
 '''
 ***
 Tensor objects are not iterable..
-So, we cannot write 
+So, we cannot write
 for _ in tf.range(3)
 ^ This would raise an error.
 ***
@@ -244,7 +244,103 @@ sess2.close()
 W = tf.Variable(tf.truncated_normal([700, 10]))
 U = tf.Variable(2 * W)
 
-# In the above case while 
+# In the above case while running the session we need to initialize first "W" and then "U". Otherwise it throws an error
+# To initialize variable "W" without calling initializer op we do the following
+
+W = tf.Variable(tf.truncated_normal([700, 10]))
+U = tf.Variable(2 * W.initialized_value())
+
+############# Control Dependencies ###############
+
+tf.Graph.control_dependencies(control_inputs)
+'''
+with g.control_dependencies([a, b, c]):
+	d = ......
+	e = ......
+Here d & e will run only after a, b, c have been initialized
+'''
+
+################### PLACEHOLDERS ###################
+
+# We want our clients to supply their own data later when they need to execute the program
+# Placeholder will assemble the graph first without knowing the values needed for computation
+
+'''
+syntax = tf.placeholder(dtype, shape=None, name=None)
+
+'''
+# create a placeholder of type float 32-bit, shape is a vector of 3 elements
+a = tf.placeholder(tf.float32, shape = [3])
+
+# create a constant of type float 32-bit, shape is a vector of 3 elements
+b = tf.constant([5, 6, 7], tf.float32)
+
+# use the placeholder as you would a constant or a variable
+c = a + b
+
+# feed [1, 2, 3] to placeholder a via the dict {a: [1, 2, 3]}
+# fetch value of c
+with tf.Session as sess:
+	sess.run(c, {a: [1, 2, 3]})
+
+
+# If we shape as None then any shape is accepted as value of placeholder
+# But debugging becomes difficult, since many ops require shape
+
+# For feeding various values
+with tf.Session as sess:
+	for a_val in list_of_values_of_a:
+		sess.run(c, {a: a_val})
+
+
+# Normal loading vs Lazy loading
+
+# Normal Loading
+x = tf.constant(10)
+y = tf.constant(20)
+z = tf.add(x, y)
+
+with tf.Session() as sess:
+	sess.run(tf.global_variables_initializer())
+	writer = tf.summary.FileWriter('./my_graph/12', sess.graph)
+	for _ in range(10):
+		sess.run(z)
+	writer.close()
+
+
+# Lazy laading
+x = tf.constant(10)
+y = tf.constant(20)
+
+with tf.Session() as sess:
+	sess.run(tf.global_variables_initializer())
+	writer = tf.summary.FileWriter('./my_graph/12', sess.graph)
+	for _ in range(10):
+		sess.run(tf.add(x, y))
+	writer.close()
+
+# Although we saved one line of code we missed the node add in graph which makes it difficult
+# Also, in normal loading the node add was created only once, while in lazy loading it was created multiple times in the loop.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

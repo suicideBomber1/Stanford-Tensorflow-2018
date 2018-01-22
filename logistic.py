@@ -2,8 +2,10 @@
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+import time
 
-mnist = input_data.read_data_sets("/data/mnist", one_hot=True)
+mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
+
 
 learning_rate = 0.01
 batch_size = 128
@@ -27,12 +29,12 @@ logits = tf.matmul(X, w) + b
 
 # Defining the loss function
 
-entropy = tf.nn.softmax_cross_entropy_with_logits(logits, Y, name='loss')
+entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y)
 loss = tf.reduce_mean(entropy)
 
 # Creating the optimizer
 
-optimizer = tf.train.GradientDescentOptmizer(learning_rate).minimize(loss)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
 # Training and running our model
 
@@ -47,7 +49,7 @@ with tf.Session() as sess:
             X_batch, Y_batch = mnist.train.next_batch(batch_size)
             _, loss_batch = sess.run([optimizer, loss], feed_dict={X: X_batch, Y: Y_batch})
             total_loss += loss_batch
-            print("Average loss epoch {0}: {1}", format(i, total_loss / n_batches))
+        print('Average loss epoch {0}: {1}'.format(i, total_loss / n_batches))
 
-        print("Total time : {0}", format(time.time() - start_time))
-        print("Optimizstion finished!")
+    print("Total time : {0}".format(time.time() - start_time))
+    print("Optimizstion finished!")

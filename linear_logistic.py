@@ -26,7 +26,24 @@ Y_pred = w * X + b
 
 # Specifying the loss function
 
-loss = tf.square(Y_pred - Y, name='loss')
+# loss = tf.square(Y_pred - Y, name='loss')
+
+# The loss is heavily dependent on the last point..causing the graph to pull up
+# Therefore we define Huber loss making it less dependent on those inflating points
+# we cannot write if else loops in tensorflow, so we define a func
+# Defining Huber loss
+
+
+def huber_loss(labels, predictions, delta=1.0):
+    residual = tf.abs(predictions - labels)
+    condition = tf.less(residual, delta)
+    small_res = tf.square(residual) * 0.5
+    large_res = (delta * residual) - (0.5 * tf.square(delta))
+    return tf.where(condition, small_res, large_res)
+
+
+# Specifying a new loss function
+loss = huber_loss(Y, Y_pred, delta=1.0)
 
 # Creating an optimizer
 
@@ -54,3 +71,5 @@ plt.plot(X, Y, 'bo', label='Real data')
 plt.plot(X, X * w_value + b_value, 'r', label='Predicted data')
 plt.legend()
 plt.show()
+
+# We can see the loss decreasing by a large margin by using Huber loss
